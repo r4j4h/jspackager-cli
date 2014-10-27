@@ -31,6 +31,7 @@
             "JsPackager\\": "tests/"
         }
     },
+    "bin": ["src/JsPackagerCli.php"],
     "extra": {
         "branch-alias": {
             "dev-develop": "1.1.x-dev",

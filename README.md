@@ -13,7 +13,7 @@ Typical Usage
 
 From the repository root, execute `php src/JsPackagerCli.php --help` to get started.
 
-`
+```
 JsPackager Compiler v0.1
 Options available:
  Input file argument:       --inputFile <filepath>
@@ -22,6 +22,6 @@ Options available:
  Clear Packages argument:   --clearFolder <folderpath>
  Check working directory:   --cwd
  View help (this):          --help
-`
+```
 
 

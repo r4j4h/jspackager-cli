@@ -61,6 +61,7 @@ HELPBLURB
 
 
         $compiler = new Compiler();
+        $compiler->logger = $this->logger;
 
         foreach( $foldersToClear as $inputFile )
         {

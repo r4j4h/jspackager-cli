@@ -59,6 +59,7 @@ HELPBLURB
         $compilerTimeStart = microtime( true );
 
         $compiler = new Compiler();
+        $compiler->logger = $this->logger;
 
         foreach( $foldersToClear as $inputFolder )
         {
@@ -120,7 +121,7 @@ HELPBLURB
 
             foreach( $filesToCompile as $fileToCompile )
             {
-                $compilationSuccessful = compileFile($compiler, $fileToCompile);
+                $compilationSuccessful = $this->compileFile($compiler, $fileToCompile);
 
                 // If this file failed to compile, we were not completely successful
                 if ( !$compilationSuccessful )
@@ -157,6 +158,66 @@ HELPBLURB
     }
 
 
+
+
+    /**
+     * Compile a file using a Compiler, reporting back to the UI
+     *
+     * @param Compiler $compiler
+     * @param string $filePath
+     */
+    function compileFile($compiler, $filePath) {
+        $completelySuccessful = true;
+
+        $this->logger->info("Confirming path to '{$filePath}'.");
+        $realPathResult = realpath( $filePath );
+        if ( $realPathResult === false ) {
+            $this->logger->error("Path '{$filePath}' resolved to nowhere.");
+            return false;
+        } else {
+            $filePath = $realPathResult;
+        }
+
+        $this->updateUserInterface( "Compiling \"{$filePath}\"\n", 'output' );
+
+        $this->updateUserInterface( "[Compiling] Loading file \"{$filePath}\" for compilation..." . PHP_EOL, 'status' );
+
+        try
+        {
+            $compilationTimingStart = microtime( true );
+
+            $compiledFiles = $compiler->compileAndWriteFilesAndManifests( $filePath, 'updateUserInterface' );
+
+            $compilationTimingEnd = microtime( true );
+            $compilationTotalTime = $compilationTimingEnd - $compilationTimingStart;
+            $this->updateUserInterface( "[Compiling] Successfully compiled file \"{$filePath}\" in {$compilationTotalTime} seconds.", 'status' );
+
+            $this->updateUserInterface( "\t\tIt resulted in " . count($compiledFiles) . ' compiled packages:' . PHP_EOL, 'output' );
+
+            foreach( $compiledFiles as $compiledFile ) {
+                $this->updateUserInterface( "\t\t{$compiledFile->sourcePath}\n", 'output' );
+                $this->updateUserInterface( "\t\t\t{$compiledFile->compiledPath}\n", 'output' );
+                $this->updateUserInterface( "\t\t\t{$compiledFile->manifestPath}\n", 'output' );
+            }
+        }
+        catch ( MissingFileException $e )
+        {
+            $this->updateUserInterface( "[Compiling] [ERROR] {$e->getMessage()}", 'error' );
+            $completelySuccessful = false;
+        }
+        catch ( ParsingException $e )
+        {
+            $this->updateUserInterface( "[Compiling] [ERROR] {$e->getMessage()}", 'error' );
+            $completelySuccessful = false;
+        }
+        catch ( CannotWriteException $e )
+        {
+            $this->updateUserInterface( "[Compiling] [ERROR] Failed to compile \"{$e->getFilePath()}\" - " . $e->getMessage(), 'error' );
+            $completelySuccessful = false;
+        }
+
+        return $completelySuccessful;
+    }
 
     /**
      * Exits with the appropriate exit code.

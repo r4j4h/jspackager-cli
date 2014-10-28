@@ -5,6 +5,7 @@ namespace JsPackager\Command;
 use JsPackager\Compiler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,18 +54,24 @@ HELPBLURB
     {
         $foldersToClear = ( $input->getArgument('folder') );
 
-        $success = false;
+        $actuallySuccessful = true;
 
         $this->logger = new ConsoleLogger($output);
 
         $compiler = new Compiler();
+        $compiler->logger = $this->logger;
 
-        foreach( $foldersToClear as $folderPath )
+        $foldersCleared = array();
+
+        foreach( $foldersToClear as $index => $folderPath )
         {
             $this->logger->info("Confirming path to '{$folderPath}'.");
             $realPathResult = realpath( $folderPath );
             if ( $realPathResult === false ) {
                 $this->logger->error("Path '{$folderPath}' resolved to nowhere.");
+                $success = false;
+                array_push($foldersCleared, array($folderPath, $success?'<info>Yes</info>':'<error>No</error>'));
+
                 continue;
             } else {
                 $folderPath = $realPathResult;
@@ -74,16 +81,23 @@ HELPBLURB
 
             $success = $compiler->clearPackages($folderPath);
 
+            array_push($foldersCleared, array($folderPath, $success?'<info>Yes</info>':'<error>No</error>'));
+
             if ( !$success )
             {
                 $this->logger->error( "An error occurred while clearing packages. Halting compilation." );
-                return 1; // Something went wrong
+                $actuallySuccessful = false;
             }
         }
 
         $this->logger->notice( "Finished clearing packages." );
 
-        return 0; // A-OK error code
+        $table = new Table($output);
+        $table->setHeaders(array('Folder','Successfully Cleared'));
+        $table->setRows($foldersCleared);
+        $table->render();
+
+        return !$actuallySuccessful; // Error codes are inverted
     }
 
 

@@ -30,7 +30,7 @@
             "JsPackager\\": "tests/"
         }
     },
-    "bin": ["bin/jspackager.php"],
+    "bin": ["bin/jspackager"],
     "extra": {
         "branch-alias": {
             "dev-develop": "1.1.x-dev",

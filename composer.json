@@ -22,8 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "JsPackager\\": "src/JsPackager/",
-            "JsPackager\\Command\\": "clicommands/"
+            "JsPackager\\": "src/JsPackager/"
         }
     },
     "autoload-dev": {
@@ -31,7 +30,7 @@
             "JsPackager\\": "tests/"
         }
     },
-    "bin": ["src/JsPackagerCli.php"],
+    "bin": ["bin/jspackager.php"],
     "extra": {
         "branch-alias": {
             "dev-develop": "1.1.x-dev",

@@ -11,30 +11,30 @@ Command Line Interface for [jspackager-test](r4j4h/jspackager-test).
 Typical Usage
 ------------
 
-From the repository root, execute `php src/JsPackagerCli.php --help` to get started.
+From the repository root, execute `php src/jspackager.php --help` to get started.
 
 ```
-JsPackager Compiler v0.1
-Options available:
- Input file argument:       --inputFile <filepath>
- Input folder argument:     --inputFolder <folderpath>
- Force Compile argument:    -f or --force
- Clear Packages argument:   --clearFolder <folderpath>
- Check working directory:   --cwd
- View help (this):          --help
+Available commands:
+  clear-folders     Clear compiled files and manifests in given folder(s).
+  compile-files     Compiled given file(s).
+  compile-folders   Compile files in given folder(s).
 ```
+
+You probably want to use `-vvv` at least at first to get a good idea of what's going on.
+
+
 
 How you want to use this really depends on how you lay out your scripts and want them batched together.
 
 If you have a folder of main files then you might find these two argument sets useful:
 
-`php vendor/bin/JsPackagerCli.php --inputFolder js/`
+`php vendor/bin/jspackager.php compile-folders js/`
 
-`php vendor/bin/JsPackagerCli.php --clearFolder js/`
+`php vendor/bin/jspackager.php clear-folders js/`
 
 But you may want more fine grained control:
 
-`php vendor/bin/JsPackagerCli.php --inputFile js/main.js`
+`php vendor/bin/jspackager.php compile-files js/main.js js/another-file.js`
 
 
 Require Format

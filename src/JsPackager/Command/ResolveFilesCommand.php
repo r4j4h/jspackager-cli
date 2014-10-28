@@ -3,6 +3,7 @@
 namespace JsPackager\Command;
 
 use JsPackager\Compiler;
+use JsPackager\DependencyTree;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -12,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CompileFilesCommand extends Command
+class ResolveFilesCommand extends Command
 {
 
     /**
@@ -21,19 +22,19 @@ class CompileFilesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('compile-files')
-            ->setDescription('Compiled given file(s).')
+            ->setName('resolve-files')
+            ->setDescription('Resolve a file\'s dependencies.')
             ->setDefinition($this->createDefinition())
             ->setHelp(<<<HELPBLURB
-<info>%command.name%</info> provides an easy way to compile a given file or list of files.
+<info>%command.name%</info> provides an easy way to programmatically use JsPackager.
 
-\t<info>%command.full_name% src/main.js</info> compiles the src/main.js file with its dependencies.
+\t<info>%command.full_name% src/main.js</info> returns the dependent files, including src/main.js, separated by newlines.
 
 By default, output is fairly quiet unless there are problems. To see what's going on, increase the verbosity level.
 
 \t<info>%command.full_name% src/main.js -vv</info>
 
-Multiple files are supported.
+Multiple files are supported, and each input will be separated with an extra newline.
 
 \t<info>%command.full_name% src/main-file.js src/batched-lib.js</info>.
 
@@ -48,6 +49,11 @@ HELPBLURB
     protected $logger;
 
     /**
+     * @var OutputInterface
+    */
+    protected $output;
+
+    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -57,14 +63,10 @@ HELPBLURB
         $completelySuccessful = true;
 
         $this->logger = new ConsoleLogger($output);
-
-        $compilerTimeStart = microtime( true );
-
+        $this->output = $output;
 
         $compiler = new Compiler();
         $compiler->logger = $this->logger;
-
-        $filesCompiled = array();
 
         foreach( $foldersToClear as $inputFile )
         {
@@ -72,23 +74,12 @@ HELPBLURB
 
             $compilationSuccessful = $this->compileFile( $compiler, $inputFile );
 
-            array_push($filesCompiled, array($inputFile, $compilationSuccessful?'<info>Yes</info>':'<error>No</error>'));
-
             // If this file failed to compile, we were not completely successful
             if ( !$compilationSuccessful )
             {
                 $completelySuccessful = false;
             }
         }
-
-        $compilerTimeEnd = microtime( true );
-        $compilerTimeTotal = $compilerTimeEnd - $compilerTimeStart;
-        $this->logger->notice( "JsPackager compiler finished file compilation. (Total time: {$compilerTimeTotal} seconds)." );
-
-        $table = new Table($output);
-        $table->setHeaders(array('Folder','Successfully Compiled'));
-        $table->setRows($filesCompiled);
-        $table->render();
 
         return !$completelySuccessful; // A-OK error code
     }
@@ -112,26 +103,20 @@ HELPBLURB
             $filePath = $realPathResult;
         }
 
-        $this->updateUserInterface( "Compiling \"{$filePath}\"\n", 'output' );
-
-        $this->updateUserInterface( "[Compiling] Loading file \"{$filePath}\" for compilation..." . PHP_EOL, 'status' );
+        $this->logger->notice( "Resolving \"{$filePath}\" for dependencies..." );
 
         try
         {
             $compilationTimingStart = microtime( true );
 
-            $compiledFiles = $compiler->compileAndWriteFilesAndManifests( $filePath, 'updateUserInterface' );
 
-            $compilationTimingEnd = microtime( true );
-            $compilationTotalTime = $compilationTimingEnd - $compilationTimingStart;
-            $this->updateUserInterface( "[Compiling] Successfully compiled file \"{$filePath}\" in {$compilationTotalTime} seconds.", 'status' );
+            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger );
+            $dependencyTree->logger = $this->logger;
 
-            $this->updateUserInterface( "\t\tIt resulted in " . count($compiledFiles) . ' compiled packages:' . PHP_EOL, 'output' );
+            $files = $dependencyTree->flattenDependencyTree();
 
-            foreach( $compiledFiles as $compiledFile ) {
-                $this->updateUserInterface( "\t\t{$compiledFile->sourcePath}\n", 'output' );
-                $this->updateUserInterface( "\t\t\t{$compiledFile->compiledPath}\n", 'output' );
-                $this->updateUserInterface( "\t\t\t{$compiledFile->manifestPath}\n", 'output' );
+            foreach($files as $file) {
+                $this->output->writeln($file);
             }
         }
         catch ( MissingFileException $e )
@@ -222,7 +207,7 @@ HELPBLURB
     protected function createDefinition()
     {
         return new InputDefinition(array(
-            new InputArgument('file',  InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative path to file to compile.'),
+            new InputArgument('file',  InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative path to file to resolve.'),
         ));
     }
 }

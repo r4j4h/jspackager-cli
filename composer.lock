@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eaa8a22655aa954214836b9f7bb64a51",
+    "hash": "8dc817b59e0ec9a826638f30c38fd8ec",
     "packages": [
         {
             "name": "psr/log",
@@ -50,12 +50,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/r4j4h/jspackager-test.git",
-                "reference": "6f6bde382078611e54b7ebbd9a1dc81a2d746391"
+                "reference": "f9ead12997207fcb469cabe5accfbb1d2e2d4425"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/6f6bde382078611e54b7ebbd9a1dc81a2d746391",
-                "reference": "6f6bde382078611e54b7ebbd9a1dc81a2d746391",
+                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/f9ead12997207fcb469cabe5accfbb1d2e2d4425",
+                "reference": "f9ead12997207fcb469cabe5accfbb1d2e2d4425",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +97,7 @@
                 "source": "https://github.com/r4j4h/jspackager-test/tree/master",
                 "issues": "https://github.com/r4j4h/jspackager-test/issues"
             },
-            "time": "2014-10-28 02:56:39"
+            "time": "2014-10-28 05:20:30"
         },
         {
             "name": "symfony/console",

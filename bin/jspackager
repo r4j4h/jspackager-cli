@@ -40,12 +40,14 @@ use Symfony\Component\Console\Application;
 $clearFoldersCommand = new Command\ClearFoldersCommand();
 $compileFoldersCommand = new Command\CompileFoldersCommand();
 $compileFilesCommand = new Command\CompileFilesCommand();
+$resolveFilesCommand = new Command\ResolveFilesCommand();
 
 $console = new Application();
 
 $console->add( $clearFoldersCommand );
 $console->add( $compileFoldersCommand );
 $console->add( $compileFilesCommand );
+$console->add( $resolveFilesCommand );
 
 $console->run();
 

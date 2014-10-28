@@ -24,12 +24,17 @@ class CompileFoldersCommand extends Command
             ->setDescription('Compile files in given folder(s).')
             ->setDefinition($this->createDefinition())
             ->setHelp(<<<HELPBLURB
-Examples:
-Dates:
-\t<info>clear-folders 2008-01-01 2009-01-01</info>
-Dates with Time:
-\t<info>php ingest.php ingest 2008-01-01T01:30:00 2009-01-01T04:20:00 -v</info>
+<info>%command.name%</info> provides an easy way to compile files in the given folder(s).
 
+\t<info>%command.full_name% src/</info> compiles everything in the local ./src folder.
+
+By default, output is fairly quiet unless there are problems. To see what's going on, increase the verbosity level.
+
+\t<info>%command.full_name% src/ -vv</info>
+
+Multiple folders are supported.
+
+\t<info>%command.full_name% src/main-files/ src/batched-libs/</info>.
 HELPBLURB
             );
         ;

@@ -24,11 +24,17 @@ class CompileFilesCommand extends Command
             ->setDescription('Compiled given file(s).')
             ->setDefinition($this->createDefinition())
             ->setHelp(<<<HELPBLURB
-Examples:
-Dates:
-\t<info>clear-folders 2008-01-01 2009-01-01</info>
-Dates with Time:
-\t<info>php ingest.php ingest 2008-01-01T01:30:00 2009-01-01T04:20:00 -v</info>
+<info>%command.name%</info> provides an easy way to compile a given file or list of files.
+
+\t<info>%command.full_name% src/main.js</info> compiles the src/main.js file with its dependencies.
+
+By default, output is fairly quiet unless there are problems. To see what's going on, increase the verbosity level.
+
+\t<info>%command.full_name% src/ -vv</info>
+
+Multiple files are supported.
+
+\t<info>%command.full_name% src/main-files.js src/batched-lib.js</info>.
 
 HELPBLURB
             );

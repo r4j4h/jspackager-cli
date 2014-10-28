@@ -5,6 +5,7 @@ namespace JsPackager\Command;
 use JsPackager\Compiler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,7 +54,7 @@ HELPBLURB
     {
         $foldersToClear = ( $input->getArgument('file') );
 
-        $success = true;
+        $completelySuccessful = true;
 
         $this->logger = new ConsoleLogger($output);
 
@@ -63,16 +64,20 @@ HELPBLURB
         $compiler = new Compiler();
         $compiler->logger = $this->logger;
 
+        $filesCompiled = array();
+
         foreach( $foldersToClear as $inputFile )
         {
             $this->logger->info("Compiling file '{$inputFile}'.");
 
             $compilationSuccessful = $this->compileFile( $compiler, $inputFile );
 
+            array_push($filesCompiled, array($inputFile, $compilationSuccessful?'<info>Yes</info>':'<error>No</error>'));
+
             // If this file failed to compile, we were not completely successful
             if ( !$compilationSuccessful )
             {
-                $success = false;
+                $completelySuccessful = false;
             }
         }
 
@@ -80,7 +85,12 @@ HELPBLURB
         $compilerTimeTotal = $compilerTimeEnd - $compilerTimeStart;
         $this->logger->notice( "JsPackager compiler finished file compilation. (Total time: {$compilerTimeTotal} seconds)." );
 
-        return !$success; // A-OK error code
+        $table = new Table($output);
+        $table->setHeaders(array('Folder','Successfully Cleared'));
+        $table->setRows($filesCompiled);
+        $table->render();
+
+        return !$completelySuccessful; // A-OK error code
     }
 
 

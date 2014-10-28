@@ -54,7 +54,7 @@ HELPBLURB
     {
         $foldersToClear = ( $input->getArgument('folder') );
 
-        $actuallySuccessful = true;
+        $completelySuccessful = true;
 
         $this->logger = new ConsoleLogger($output);
 
@@ -69,8 +69,8 @@ HELPBLURB
             $realPathResult = realpath( $folderPath );
             if ( $realPathResult === false ) {
                 $this->logger->error("Path '{$folderPath}' resolved to nowhere.");
-                $success = false;
-                array_push($foldersCleared, array($folderPath, $success?'<info>Yes</info>':'<error>No</error>'));
+                $clearingSuccessful = false;
+                array_push($foldersCleared, array($folderPath, $clearingSuccessful?'<info>Yes</info>':'<error>No</error>'));
 
                 continue;
             } else {
@@ -79,14 +79,14 @@ HELPBLURB
 
             $this->logger->notice("Clearing all packages (compiled files and manifests) in {$folderPath}...");
 
-            $success = $compiler->clearPackages($folderPath);
+            $clearingSuccessful = $compiler->clearPackages($folderPath);
 
-            array_push($foldersCleared, array($folderPath, $success?'<info>Yes</info>':'<error>No</error>'));
+            array_push($foldersCleared, array($folderPath, $clearingSuccessful?'<info>Yes</info>':'<error>No</error>'));
 
-            if ( !$success )
+            if ( !$clearingSuccessful )
             {
                 $this->logger->error( "An error occurred while clearing packages. Halting compilation." );
-                $actuallySuccessful = false;
+                $completelySuccessful = false;
             }
         }
 
@@ -97,7 +97,7 @@ HELPBLURB
         $table->setRows($foldersCleared);
         $table->render();
 
-        return !$actuallySuccessful; // Error codes are inverted
+        return !$completelySuccessful; // Error codes are inverted
     }
 
 

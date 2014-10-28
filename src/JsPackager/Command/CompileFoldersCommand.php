@@ -84,7 +84,7 @@ HELPBLURB
         $this->logger->notice( "JsPackager compiler finished folder compilation. (Total time: {$compilerTimeTotal} seconds)." );
 
         $table = new Table($output);
-        $table->setHeaders(array('Folder','Successfully Cleared'));
+        $table->setHeaders(array('Folder','Successfully Compiled'));
         $table->setRows($foldersCompiled);
         $table->render();
 

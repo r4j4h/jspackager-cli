@@ -10,6 +10,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -59,6 +60,10 @@ HELPBLURB
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $foldersToClear = ( $input->getArgument('file') );
+        $asJson = $input->getOption('json');
+        $excludingStylesheets = $input->getOption('excludeStylesheets');
+        $excludingScripts = $input->getOption('excludeScripts');
+
 
         $completelySuccessful = true;
 
@@ -72,7 +77,7 @@ HELPBLURB
         {
             $this->logger->info("Compiling file '{$inputFile}'.");
 
-            $compilationSuccessful = $this->compileFile( $compiler, $inputFile );
+            $compilationSuccessful = $this->compileFile( $compiler, $inputFile, $asJson, $excludingScripts, $excludingStylesheets );
 
             // If this file failed to compile, we were not completely successful
             if ( !$compilationSuccessful )
@@ -90,8 +95,11 @@ HELPBLURB
      *
      * @param Compiler $compiler
      * @param string $filePath
+     * @param bool $asJson
+     * @param bool $excludingScripts
+     * @param bool $excludingStylesheets
      */
-    function compileFile($compiler, $filePath) {
+    function compileFile($compiler, $filePath, $asJson, $excludingScripts, $excludingStylesheets) {
         $completelySuccessful = true;
 
         $this->logger->info("Confirming path to '{$filePath}'.");
@@ -113,10 +121,21 @@ HELPBLURB
             $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger );
             $dependencyTree->logger = $this->logger;
 
-            $files = $dependencyTree->flattenDependencyTree();
+            $files = $dependencyTree->flattenDependencyTreeFile();
+            $returningFiles = array();
+            if ( !$excludingStylesheets ) {
+                $returningFiles = array_merge($returningFiles, $files['stylesheets']);
+            }
+            if ( !$excludingScripts ) {
+                $returningFiles = array_merge($returningFiles, $files['scripts']);
+            }
 
-            foreach($files as $file) {
-                $this->output->writeln($file);
+            if ( $asJson ) {
+                $this->output->writeln( json_encode( $returningFiles ) );
+            } else {
+                foreach ($returningFiles as $file) {
+                    $this->output->writeln($file);
+                }
             }
         }
         catch ( MissingFileException $e )
@@ -208,6 +227,9 @@ HELPBLURB
     {
         return new InputDefinition(array(
             new InputArgument('file',  InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative path to file to resolve.'),
+            new InputOption('json', null, InputOption::VALUE_NONE, "Return results as a JSON array"),
+            new InputOption('excludeStylesheets', null, InputOption::VALUE_NONE, "Exclude stylesheets from the return results"),
+            new InputOption('excludeScripts', null, InputOption::VALUE_NONE, "Exclude scripts from the return results"),
         ));
     }
 }

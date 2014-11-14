@@ -50,12 +50,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/r4j4h/jspackager-test.git",
-                "reference": "26f2d4dd41000aa89e47a6c244324dbfcee59087"
+                "reference": "7bf95f478d952c0c9e0f46e953cc100cfa5079bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/26f2d4dd41000aa89e47a6c244324dbfcee59087",
-                "reference": "26f2d4dd41000aa89e47a6c244324dbfcee59087",
+                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/7bf95f478d952c0c9e0f46e953cc100cfa5079bd",
+                "reference": "7bf95f478d952c0c9e0f46e953cc100cfa5079bd",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +97,7 @@
                 "source": "https://github.com/r4j4h/jspackager-test/tree/master",
                 "issues": "https://github.com/r4j4h/jspackager-test/issues"
             },
-            "time": "2014-10-29 04:40:28"
+            "time": "2014-11-14 00:48:45"
         },
         {
             "name": "symfony/console",

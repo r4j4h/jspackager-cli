@@ -75,7 +75,7 @@ HELPBLURB
             array_push($filesCompiled, array($inputFile, $compilationSuccessful?'<info>Yes</info>':'<error>No</error>'));
 
             // If this file failed to compile, we were not completely successful
-            if ( !$compilationSuccessful )
+            if ( $compilationSuccessful === false )
             {
                 $completelySuccessful = false;
             }
@@ -90,7 +90,7 @@ HELPBLURB
         $table->setRows($filesCompiled);
         $table->render();
 
-        return !$completelySuccessful; // A-OK error code
+        return (int)(!$completelySuccessful); // A-OK error code
     }
 
 

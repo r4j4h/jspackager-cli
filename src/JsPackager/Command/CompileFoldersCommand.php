@@ -73,7 +73,7 @@ HELPBLURB
             array_push($foldersCompiled, array($inputFolder, $compilationSuccessful?'<info>Yes</info>':'<error>No</error>'));
 
             // If this folder failed to compile completely, we were not completely successful
-            if ( !$compilationSuccessful )
+            if ( $compilationSuccessful === false )
             {
                 $completelySuccessful = false;
             }
@@ -88,7 +88,7 @@ HELPBLURB
         $table->setRows($foldersCompiled);
         $table->render();
 
-        return !$completelySuccessful; // A-OK error code
+        return (int)(!$completelySuccessful); // A-OK error code
     }
 
 

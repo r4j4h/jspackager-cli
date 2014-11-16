@@ -49,6 +49,5 @@ $console->add( $compileFoldersCommand );
 $console->add( $compileFilesCommand );
 $console->add( $resolveFilesCommand );
 
-$console->run();
-
+return $console->run();
 

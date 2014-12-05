@@ -80,13 +80,13 @@ HELPBLURB
             $compilationSuccessful = $this->compileFile( $compiler, $inputFile, $asJson, $excludingScripts, $excludingStylesheets );
 
             // If this file failed to compile, we were not completely successful
-            if ( !$compilationSuccessful )
+            if ( $compilationSuccessful === false )
             {
                 $completelySuccessful = false;
             }
         }
 
-        return !$completelySuccessful; // A-OK error code
+        return (int)(!$completelySuccessful); // A-OK error code
     }
 
 

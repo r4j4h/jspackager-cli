@@ -83,7 +83,7 @@ HELPBLURB
 
             array_push($foldersCleared, array($folderPath, $clearingSuccessful?'<info>Yes</info>':'<error>No</error>'));
 
-            if ( !$clearingSuccessful )
+            if ( $clearingSuccessful === false )
             {
                 $this->logger->error( "An error occurred while clearing packages. Halting compilation." );
                 $completelySuccessful = false;
@@ -97,7 +97,7 @@ HELPBLURB
         $table->setRows($foldersCleared);
         $table->render();
 
-        return !$completelySuccessful; // Error codes are inverted
+        return (int)(!$completelySuccessful); // Error codes are inverted
     }
 
 

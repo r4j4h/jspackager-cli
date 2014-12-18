@@ -5,7 +5,7 @@ jspackager-cli
 About
 ------------
 
-Command Line Interface for [jspackager-test](r4j4h/jspackager-test).
+Command Line Interface for [r4j4h/jspackager-test](https://github.com/r4j4h/jspackager-test).
 
 
 Typical Usage

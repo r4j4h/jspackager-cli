@@ -121,7 +121,7 @@ HELPBLURB
             $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger );
             $dependencyTree->logger = $this->logger;
 
-            $files = $dependencyTree->flattenDependencyTreeFile();
+            $files = $dependencyTree->flattenDependencyTreeIntoAssocArrays();
             $returningFiles = array();
             if ( !$excludingStylesheets ) {
                 $returningFiles = array_merge($returningFiles, $files['stylesheets']);

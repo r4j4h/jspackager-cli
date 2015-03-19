@@ -60,6 +60,7 @@ HELPBLURB
         $compilerTimeStart = microtime( true );
 
         $compiler = new Compiler();
+        $compiler->sharedFolderPath = getcwd() . '/' . 'public/shared';
         $compiler->logger = $this->logger;
 
         $foldersCompiled = array();

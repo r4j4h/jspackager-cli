@@ -117,8 +117,9 @@ HELPBLURB
         {
             $compilationTimingStart = microtime( true );
 
+            $haredFolderPath = getcwd() . '/' . 'public/shared';
 
-            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger );
+            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger, $haredFolderPath );
             $dependencyTree->logger = $this->logger;
 
             $files = $dependencyTree->flattenDependencyTreeIntoAssocArrays();

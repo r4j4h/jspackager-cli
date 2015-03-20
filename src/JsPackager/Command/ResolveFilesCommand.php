@@ -27,17 +27,22 @@ class ResolveFilesCommand extends Command
             ->setDescription('Resolve a file\'s dependencies.')
             ->setDefinition($this->createDefinition())
             ->setHelp(<<<HELPBLURB
-<info>%command.name%</info> provides an easy way to programmatically use JsPackager.
 
-\t<info>%command.full_name% src/main.js</info> returns the dependent files, including src/main.js, separated by newlines.
+<command>%command.name%</command> takes <info>a file's path</info> and <info>resolves it into an array of file paths</info> representing that file's <info>dependencies</info>.
+
+\t<example>%command.full_name% <source file path></example> returns the paths to the dependent files, including the given source file (last), separated by newlines.
+
+<header>Usage notes:</header>
+
+\t<example>%command.full_name% src/main.js</example> returns the dependent files, including src/main.js, separated by newlines.
 
 By default, output is fairly quiet unless there are problems. To see what's going on, increase the verbosity level.
 
-\t<info>%command.full_name% src/main.js -vv</info>
+\t<example>%command.full_name% src/main.js -vv</example>
 
 Multiple files are supported, and each input will be separated with an extra newline.
 
-\t<info>%command.full_name% src/main-file.js src/batched-lib.js</info>.
+\t<example>%command.full_name% src/main-file.js src/batched-lib.js</example>.
 
 HELPBLURB
             );

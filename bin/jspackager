@@ -24,6 +24,7 @@ date_default_timezone_set('America/Denver');
 
 use JsPackager\Command;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 
 // Read configs for Ingestion's DB access
@@ -49,5 +50,17 @@ $console->add( $compileFoldersCommand );
 $console->add( $compileFilesCommand );
 $console->add( $resolveFilesCommand );
 
-return $console->run();
+$output = new \Symfony\Component\Console\Output\ConsoleOutput();
+
+// Define some OutputFormatterStyle s
+$output->getFormatter()->setStyle('b',          new OutputFormatterStyle(null, null, array('bold')));
+$output->getFormatter()->setStyle('bold',       new OutputFormatterStyle(null, null, array('bold')));
+
+$output->getFormatter()->setStyle('command',     new OutputFormatterStyle('cyan', null, array('bold', 'reverse')));
+$output->getFormatter()->setStyle('header',     new OutputFormatterStyle('yellow', null, array()));
+
+$output->getFormatter()->setStyle('example',    new OutputFormatterStyle('green', null, array('bold')));
+$output->getFormatter()->setStyle('description',new OutputFormatterStyle('blue', null, array()));
+
+return $console->run(null, $output);
 

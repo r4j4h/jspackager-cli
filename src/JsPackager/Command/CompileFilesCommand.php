@@ -73,7 +73,7 @@ HELPBLURB
             $compiler->sharedFolderPath = $remoteFolderPath;
         } else {
             $defaultRemotePath = $this->getDefaultRemotePath();
-            $this->logger->info('No <remote base path given, using "'. $defaultRemotePath . '" as default.');
+            $this->logger->info('No remote base path given, using "'. $defaultRemotePath . '" as default.');
             $compiler->sharedFolderPath = $defaultRemotePath;
         }
         $compiler->logger = $this->logger;

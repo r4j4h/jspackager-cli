@@ -9,6 +9,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -53,6 +54,7 @@ HELPBLURB
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $foldersToClear = ( $input->getArgument('file') );
+        $remoteFolderPath = ( $input->getOption('remotePath') );
 
         $completelySuccessful = true;
 
@@ -62,7 +64,14 @@ HELPBLURB
 
 
         $compiler = new Compiler();
-        $compiler->sharedFolderPath = getcwd() . '/' . 'public/shared';
+        if ( $remoteFolderPath ) {
+            $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
+            $compiler->sharedFolderPath = $remoteFolderPath;
+        } else {
+            $defaultSharedPath = getcwd() . '/' . 'public/shared';
+            $this->logger->info('No <remote base path given, using "'. $defaultSharedPath . '" as default.');
+            $compiler->sharedFolderPath = $defaultSharedPath;
+        }
         $compiler->logger = $this->logger;
 
         $filesCompiled = array();
@@ -216,14 +225,14 @@ HELPBLURB
         return $this->createDefinition();
     }
 
-
     /**
      * {@inheritdoc}
      */
     protected function createDefinition()
     {
         return new InputDefinition(array(
-            new InputArgument('file',  InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative path to file to compile.'),
+            new InputArgument('file',   InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative path to file to compile.'),
+            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Absolute base path to use for parsing @remote files.'),
         ));
     }
 }

@@ -231,8 +231,8 @@ HELPBLURB
     protected function createDefinition()
     {
         return new InputDefinition(array(
-            new InputArgument('file',   InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative path to file to compile.'),
-            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Absolute base path to use for parsing @remote files.'),
+            new InputArgument('file',   InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative or absolute path to file to compile.'),
+            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.'),
         ));
     }
 }

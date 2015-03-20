@@ -18,6 +18,7 @@ Available commands:
   clear-folders     Clear compiled files and manifests in given folder(s).
   compile-files     Compiled given file(s).
   compile-folders   Compile files in given folder(s).
+  resolve-files     Resolve a file's dependencies.
 ```
 
 You probably want to use `-vvv` at least at first to get a good idea of what's going on.

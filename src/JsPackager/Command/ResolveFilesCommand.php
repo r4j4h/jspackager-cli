@@ -3,6 +3,7 @@
 namespace JsPackager\Command;
 
 use JsPackager\Compiler;
+use JsPackager\DefaultRemotePath;
 use JsPackager\DependencyTree;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -16,6 +17,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ResolveFilesCommand extends Command
 {
+
+    public function __construct($name = null) {
+        $defaultRemotePathInstance = new DefaultRemotePath();
+        $this->defaultRemotePath = $defaultRemotePathInstance->getDefaultRemotePath();
+        return parent::__construct($name);
+    }
 
     /**
      * {@inheritdoc}
@@ -55,14 +62,20 @@ HELPBLURB
     protected $output;
 
     /**
+     * @var String
+     */
+    protected $defaultRemotePath;
+
+    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $foldersToClear = ( $input->getArgument('file') );
+        $foldersToClear = $input->getArgument('file');
         $asJson = $input->getOption('json');
         $excludingStylesheets = $input->getOption('excludeStylesheets');
         $excludingScripts = $input->getOption('excludeScripts');
+        $remoteFolderPath = $input->getOption('remotePath');
 
 
         $completelySuccessful = true;
@@ -71,6 +84,14 @@ HELPBLURB
         $this->output = $output;
 
         $compiler = new Compiler();
+        if ( $remoteFolderPath ) {
+            $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
+            $compiler->sharedFolderPath = $remoteFolderPath;
+        } else {
+            $defaultRemotePath = $this->defaultRemotePath;
+            $this->logger->info('No remote base path given, using "'. $defaultRemotePath . '" as default.');
+            $compiler->sharedFolderPath = $defaultRemotePath;
+        }
         $compiler->logger = $this->logger;
 
         foreach( $foldersToClear as $inputFile )
@@ -231,6 +252,7 @@ HELPBLURB
             new InputOption('json', null, InputOption::VALUE_NONE, "Return results as a JSON array"),
             new InputOption('excludeStylesheets', null, InputOption::VALUE_NONE, "Exclude stylesheets from the return results"),
             new InputOption('excludeScripts', null, InputOption::VALUE_NONE, "Exclude scripts from the return results"),
+            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.', $this->defaultRemotePath),
         ));
     }
 }

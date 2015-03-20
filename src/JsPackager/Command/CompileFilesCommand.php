@@ -3,6 +3,7 @@
 namespace JsPackager\Command;
 
 use JsPackager\Compiler;
+use JsPackager\DefaultRemotePath;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -15,6 +16,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CompileFilesCommand extends Command
 {
+
+    public function __construct($name = null) {
+        $defaultRemotePathInstance = new DefaultRemotePath();
+        $this->defaultRemotePath = $defaultRemotePathInstance->getDefaultRemotePath();
+        return parent::__construct($name);
+    }
 
     /**
      * {@inheritdoc}
@@ -48,17 +55,19 @@ HELPBLURB
      */
     protected $logger;
 
-    protected function getDefaultRemotePath() {
-        return getcwd() . '/' . 'public/shared';
-    }
+    /**
+     * @var String
+     */
+    protected $defaultRemotePath;
+
 
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $foldersToClear = ( $input->getArgument('file') );
-        $remoteFolderPath = ( $input->getOption('remotePath') );
+        $foldersToClear = $input->getArgument('file');
+        $remoteFolderPath = $input->getOption('remotePath');
 
         $completelySuccessful = true;
 
@@ -72,7 +81,7 @@ HELPBLURB
             $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
             $compiler->sharedFolderPath = $remoteFolderPath;
         } else {
-            $defaultRemotePath = $this->getDefaultRemotePath();
+            $defaultRemotePath = $this->defaultRemotePath;
             $this->logger->info('No remote base path given, using "'. $defaultRemotePath . '" as default.');
             $compiler->sharedFolderPath = $defaultRemotePath;
         }
@@ -236,7 +245,7 @@ HELPBLURB
     {
         return new InputDefinition(array(
             new InputArgument('file',   InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative or absolute path to file to compile.'),
-            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.', $this->getDefaultRemotePath()),
+            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.', $this->defaultRemotePath),
         ));
     }
 }

@@ -48,6 +48,10 @@ HELPBLURB
      */
     protected $logger;
 
+    protected function getDefaultRemotePath() {
+        return getcwd() . '/' . 'public/shared';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -68,9 +72,9 @@ HELPBLURB
             $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
             $compiler->sharedFolderPath = $remoteFolderPath;
         } else {
-            $defaultSharedPath = getcwd() . '/' . 'public/shared';
-            $this->logger->info('No <remote base path given, using "'. $defaultSharedPath . '" as default.');
-            $compiler->sharedFolderPath = $defaultSharedPath;
+            $defaultRemotePath = $this->getDefaultRemotePath();
+            $this->logger->info('No <remote base path given, using "'. $defaultRemotePath . '" as default.');
+            $compiler->sharedFolderPath = $defaultRemotePath;
         }
         $compiler->logger = $this->logger;
 
@@ -232,7 +236,7 @@ HELPBLURB
     {
         return new InputDefinition(array(
             new InputArgument('file',   InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative or absolute path to file to compile.'),
-            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.'),
+            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.', $this->getDefaultRemotePath()),
         ));
     }
 }

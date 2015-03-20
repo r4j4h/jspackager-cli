@@ -67,6 +67,11 @@ HELPBLURB
     protected $defaultRemotePath;
 
     /**
+     * @var String
+     */
+    protected $remotePath;
+
+    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -86,12 +91,12 @@ HELPBLURB
         $compiler = new Compiler();
         if ( $remoteFolderPath ) {
             $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
-            $compiler->sharedFolderPath = $remoteFolderPath;
+            $this->remotePath = $remoteFolderPath;
         } else {
-            $defaultRemotePath = $this->defaultRemotePath;
-            $this->logger->info('No remote base path given, using "'. $defaultRemotePath . '" as default.');
-            $compiler->sharedFolderPath = $defaultRemotePath;
+            $this->logger->info('No remote base path given, using "'. $this->defaultRemotePath . '" as default.');
+            $this->remotePath = $this->defaultRemotePath;
         }
+        $compiler->sharedFolderPath = $this->remotePath;
         $compiler->logger = $this->logger;
 
         foreach( $foldersToClear as $inputFile )
@@ -138,9 +143,7 @@ HELPBLURB
         {
             $compilationTimingStart = microtime( true );
 
-            $haredFolderPath = getcwd() . '/' . 'public/shared';
-
-            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger, $haredFolderPath );
+            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger, $this->remotePath );
             $dependencyTree->logger = $this->logger;
 
             $files = $dependencyTree->flattenDependencyTreeIntoAssocArrays();

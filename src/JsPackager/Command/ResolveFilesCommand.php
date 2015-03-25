@@ -96,7 +96,7 @@ HELPBLURB
             $this->logger->info('No remote base path given, using "'. $this->defaultRemotePath . '" as default.');
             $this->remotePath = $this->defaultRemotePath;
         }
-        $compiler->sharedFolderPath = $this->remotePath;
+        $compiler->remoteFolderPath = $this->remotePath;
         $compiler->logger = $this->logger;
 
         foreach( $foldersToClear as $inputFile )

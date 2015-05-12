@@ -101,7 +101,7 @@ HELPBLURB
 
         foreach( $foldersToClear as $inputFile )
         {
-            $this->logger->info("Compiling file '{$inputFile}'.");
+            $this->logger->info("Resolving dependencies from file '{$inputFile}'.");
 
             $compilationSuccessful = $this->compileFile( $compiler, $inputFile, $asJson, $excludingScripts, $excludingStylesheets );
 
@@ -141,8 +141,6 @@ HELPBLURB
 
         try
         {
-            $compilationTimingStart = microtime( true );
-
             $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger, $this->remotePath );
             $dependencyTree->logger = $this->logger;
 
@@ -163,19 +161,9 @@ HELPBLURB
                 }
             }
         }
-        catch ( MissingFileException $e )
+        catch ( \Exception $e )
         {
-            $this->updateUserInterface( "[Compiling] [ERROR] {$e->getMessage()}", 'error' );
-            $completelySuccessful = false;
-        }
-        catch ( ParsingException $e )
-        {
-            $this->updateUserInterface( "[Compiling] [ERROR] {$e->getMessage()}", 'error' );
-            $completelySuccessful = false;
-        }
-        catch ( CannotWriteException $e )
-        {
-            $this->updateUserInterface( "[Compiling] [ERROR] Failed to compile \"{$e->getFilePath()}\" - " . $e->getMessage(), 'error' );
+            $this->updateUserInterface( "[ResolveFiles] [ERROR] {$e->getMessage()}", 'error' );
             $completelySuccessful = false;
         }
 

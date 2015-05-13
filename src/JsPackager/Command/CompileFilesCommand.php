@@ -3,17 +3,25 @@
 namespace JsPackager\Command;
 
 use JsPackager\Compiler;
+use JsPackager\DefaultRemotePath;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CompileFilesCommand extends Command
 {
+
+    public function __construct($name = null) {
+        $defaultRemotePathInstance = new DefaultRemotePath();
+        $this->defaultRemotePath = $defaultRemotePathInstance->getDefaultRemotePath();
+        return parent::__construct($name);
+    }
 
     /**
      * {@inheritdoc}
@@ -48,11 +56,18 @@ HELPBLURB
     protected $logger;
 
     /**
+     * @var String
+     */
+    protected $defaultRemotePath;
+
+
+    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $foldersToClear = ( $input->getArgument('file') );
+        $foldersToClear = $input->getArgument('file');
+        $remoteFolderPath = $input->getOption('remotePath');
 
         $completelySuccessful = true;
 
@@ -62,6 +77,14 @@ HELPBLURB
 
 
         $compiler = new Compiler();
+        if ( $remoteFolderPath ) {
+            $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
+            $compiler->remoteFolderPath = $remoteFolderPath;
+        } else {
+            $defaultRemotePath = $this->defaultRemotePath;
+            $this->logger->info('No remote base path given, using "'. $defaultRemotePath . '" as default.');
+            $compiler->remoteFolderPath = $defaultRemotePath;
+        }
         $compiler->logger = $this->logger;
 
         $filesCompiled = array();
@@ -215,14 +238,14 @@ HELPBLURB
         return $this->createDefinition();
     }
 
-
     /**
      * {@inheritdoc}
      */
     protected function createDefinition()
     {
         return new InputDefinition(array(
-            new InputArgument('file',  InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative path to file to compile.'),
+            new InputArgument('file',   InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative or absolute path to file to compile.'),
+            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.', $this->defaultRemotePath),
         ));
     }
 }

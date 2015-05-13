@@ -3,6 +3,7 @@
 namespace JsPackager\Command;
 
 use JsPackager\Compiler;
+use JsPackager\DefaultRemotePath;
 use JsPackager\DependencyTree;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -16,6 +17,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ResolveFilesCommand extends Command
 {
+
+    public function __construct($name = null) {
+        $defaultRemotePathInstance = new DefaultRemotePath();
+        $this->defaultRemotePath = $defaultRemotePathInstance->getDefaultRemotePath();
+        return parent::__construct($name);
+    }
 
     /**
      * {@inheritdoc}
@@ -55,14 +62,25 @@ HELPBLURB
     protected $output;
 
     /**
+     * @var String
+     */
+    protected $defaultRemotePath;
+
+    /**
+     * @var String
+     */
+    protected $remotePath;
+
+    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $foldersToClear = ( $input->getArgument('file') );
+        $foldersToClear = $input->getArgument('file');
         $asJson = $input->getOption('json');
         $excludingStylesheets = $input->getOption('excludeStylesheets');
         $excludingScripts = $input->getOption('excludeScripts');
+        $remoteFolderPath = $input->getOption('remotePath');
 
 
         $completelySuccessful = true;
@@ -71,11 +89,19 @@ HELPBLURB
         $this->output = $output;
 
         $compiler = new Compiler();
+        if ( $remoteFolderPath ) {
+            $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
+            $this->remotePath = $remoteFolderPath;
+        } else {
+            $this->logger->info('No remote base path given, using "'. $this->defaultRemotePath . '" as default.');
+            $this->remotePath = $this->defaultRemotePath;
+        }
+        $compiler->remoteFolderPath = $this->remotePath;
         $compiler->logger = $this->logger;
 
         foreach( $foldersToClear as $inputFile )
         {
-            $this->logger->info("Compiling file '{$inputFile}'.");
+            $this->logger->info("Resolving dependencies from file '{$inputFile}'.");
 
             $compilationSuccessful = $this->compileFile( $compiler, $inputFile, $asJson, $excludingScripts, $excludingStylesheets );
 
@@ -115,13 +141,10 @@ HELPBLURB
 
         try
         {
-            $compilationTimingStart = microtime( true );
-
-
-            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger );
+            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger, $this->remotePath );
             $dependencyTree->logger = $this->logger;
 
-            $files = $dependencyTree->flattenDependencyTreeFile();
+            $files = $dependencyTree->flattenDependencyTreeIntoAssocArrays();
             $returningFiles = array();
             if ( !$excludingStylesheets ) {
                 $returningFiles = array_merge($returningFiles, $files['stylesheets']);
@@ -138,19 +161,9 @@ HELPBLURB
                 }
             }
         }
-        catch ( MissingFileException $e )
+        catch ( \Exception $e )
         {
-            $this->updateUserInterface( "[Compiling] [ERROR] {$e->getMessage()}", 'error' );
-            $completelySuccessful = false;
-        }
-        catch ( ParsingException $e )
-        {
-            $this->updateUserInterface( "[Compiling] [ERROR] {$e->getMessage()}", 'error' );
-            $completelySuccessful = false;
-        }
-        catch ( CannotWriteException $e )
-        {
-            $this->updateUserInterface( "[Compiling] [ERROR] Failed to compile \"{$e->getFilePath()}\" - " . $e->getMessage(), 'error' );
+            $this->updateUserInterface( "[ResolveFiles] [ERROR] {$e->getMessage()}", 'error' );
             $completelySuccessful = false;
         }
 
@@ -230,6 +243,7 @@ HELPBLURB
             new InputOption('json', null, InputOption::VALUE_NONE, "Return results as a JSON array"),
             new InputOption('excludeStylesheets', null, InputOption::VALUE_NONE, "Exclude stylesheets from the return results"),
             new InputOption('excludeScripts', null, InputOption::VALUE_NONE, "Exclude scripts from the return results"),
+            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.', $this->defaultRemotePath),
         ));
     }
 }

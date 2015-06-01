@@ -11,7 +11,7 @@
     ],
     "require": {
         "psr/log": "1.0.0",
-        "r4j4h/jspackager-test": "2.0.0-rc2",
+        "r4j4h/jspackager-test": "~2.0@rc",
         "symfony/console": "2.5.*"
     },
     "require-dev": {

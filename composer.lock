@@ -46,16 +46,16 @@
         },
         {
             "name": "r4j4h/jspackager-test",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/r4j4h/jspackager-test.git",
-                "reference": "bf564b8e594b98bc0663a25a8ebdd676c67989fa"
+                "reference": "c65cba5fbfbd8fa8b91e81010bae5305e2791121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/bf564b8e594b98bc0663a25a8ebdd676c67989fa",
-                "reference": "bf564b8e594b98bc0663a25a8ebdd676c67989fa",
+                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/c65cba5fbfbd8fa8b91e81010bae5305e2791121",
+                "reference": "c65cba5fbfbd8fa8b91e81010bae5305e2791121",
                 "shasum": ""
             },
             "require": {
@@ -94,10 +94,10 @@
                 "file inclusion"
             ],
             "support": {
-                "source": "https://github.com/r4j4h/jspackager-test/tree/2.0.0",
+                "source": "https://github.com/r4j4h/jspackager-test/tree/2.0.1",
                 "issues": "https://github.com/r4j4h/jspackager-test/issues"
             },
-            "time": "2015-06-02 23:01:09"
+            "time": "2015-06-02 23:55:45"
         },
         {
             "name": "symfony/console",

@@ -4,7 +4,8 @@ namespace JsPackager\Command;
 
 use JsPackager\Compiler;
 use JsPackager\DefaultRemotePath;
-use JsPackager\DependencyTree;
+use JsPackager\Helpers\FileHandler;
+use JsPackager\Resolver\DependencyTree;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -88,7 +89,7 @@ HELPBLURB
         $this->logger = new ConsoleLogger($output);
         $this->output = $output;
 
-        $compiler = new Compiler();
+        $compiler = new Compiler('shared', '@remote', $this->logger, false, new FileHandler());
         if ( $remoteFolderPath ) {
             $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
             $this->remotePath = $remoteFolderPath;
@@ -141,7 +142,7 @@ HELPBLURB
 
         try
         {
-            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger, $this->remotePath );
+            $dependencyTree = new DependencyTree( $filePath, null, false, $this->logger, $this->remotePath, '@remote', new FileHandler() );
             $dependencyTree->logger = $this->logger;
 
             $files = $dependencyTree->flattenDependencyTreeIntoAssocArrays();

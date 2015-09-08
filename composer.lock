@@ -4,8 +4,44 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "08cdd540a0ed3f4f3cd5718c590c908f",
+    "hash": "9358b4e0c5172ded576ab688d58619df",
     "packages": [
+        {
+            "name": "fzaninotto/streamer",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Streamer.git",
+                "reference": "088c5baeb55794c1445011f90c40ca7f854bf9f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Streamer/zipball/088c5baeb55794c1445011f90c40ca7f854bf9f3",
+                "reference": "088c5baeb55794c1445011f90c40ca7f854bf9f3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Streamer": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Francois Zaninotto"
+                }
+            ],
+            "description": "Object-oriented API to PHP streams",
+            "homepage": "https://github.com/fzaninotto/Streamer",
+            "time": "2012-07-02 21:44:09"
+        },
         {
             "name": "psr/log",
             "version": "1.0.0",
@@ -46,26 +82,28 @@
         },
         {
             "name": "r4j4h/jspackager-test",
-            "version": "2.0.3",
+            "version": "dev-annotation-service-refactor",
             "source": {
                 "type": "git",
                 "url": "https://github.com/r4j4h/jspackager-test.git",
-                "reference": "b4ec91cd416cd535aae6ff1473d2124a7f52418a"
+                "reference": "72edb693ad9584b9144369409df020957f2e4ac1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/b4ec91cd416cd535aae6ff1473d2124a7f52418a",
-                "reference": "b4ec91cd416cd535aae6ff1473d2124a7f52418a",
+                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/72edb693ad9584b9144369409df020957f2e4ac1",
+                "reference": "72edb693ad9584b9144369409df020957f2e4ac1",
                 "shasum": ""
             },
             "require": {
+                "fzaninotto/streamer": "0.0.1",
                 "psr/log": "1.0.0"
             },
             "require-dev": {
-                "phing/phing": "2.*",
-                "phploc/phploc": "~2.0",
-                "phpmd/phpmd": "~2.1",
-                "phpunit/phpunit": "4.2.*"
+                "mikey179/vfsstream": "^1.5",
+                "phing/phing": "2.11.x",
+                "phploc/phploc": "2.1.x",
+                "phpmd/phpmd": "2.2.x",
+                "phpunit/phpunit": "4.7.7"
             },
             "type": "library",
             "extra": {
@@ -94,10 +132,10 @@
                 "file inclusion"
             ],
             "support": {
-                "source": "https://github.com/r4j4h/jspackager-test/tree/2.0.3",
+                "source": "https://github.com/r4j4h/jspackager-test/tree/annotation-service-refactor",
                 "issues": "https://github.com/r4j4h/jspackager-test/issues"
             },
-            "time": "2015-06-08 21:17:01"
+            "time": "2015-09-08 01:22:45"
         },
         {
             "name": "symfony/console",
@@ -1510,7 +1548,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "r4j4h/jspackager-test": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

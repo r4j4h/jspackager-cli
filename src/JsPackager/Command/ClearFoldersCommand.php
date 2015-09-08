@@ -2,7 +2,10 @@
 
 namespace JsPackager\Command;
 
+use JsPackager\CompiledFileAndManifest\CompiledAndManifestFileUtilityService;
+use JsPackager\CompiledFileAndManifest\FilenameConverter;
 use JsPackager\Compiler;
+use JsPackager\Helpers\FileHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -58,8 +61,7 @@ HELPBLURB
 
         $this->logger = new ConsoleLogger($output);
 
-        $compiler = new Compiler();
-        $compiler->logger = $this->logger;
+        $service = new CompiledAndManifestFileUtilityService(new FilenameConverter('compiled', 'manifest'), $this->logger);
 
         $foldersCleared = array();
 
@@ -79,7 +81,7 @@ HELPBLURB
 
             $this->logger->notice("Clearing all packages (compiled files and manifests) in {$folderPath}...");
 
-            $clearingSuccessful = $compiler->clearPackages($folderPath);
+            $clearingSuccessful = $service->clearPackages($folderPath);
 
             array_push($foldersCleared, array($folderPath, $clearingSuccessful?'<info>Yes</info>':'<error>No</error>'));
 

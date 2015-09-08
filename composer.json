@@ -11,7 +11,7 @@
     ],
     "require": {
         "psr/log": "1.0.0",
-        "r4j4h/jspackager-test": "~2.0",
+        "r4j4h/jspackager-test": "dev-annotation-service-refactor",
         "symfony/console": "2.*"
     },
     "require-dev": {

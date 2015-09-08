@@ -2,8 +2,13 @@
 
 namespace JsPackager\Command;
 
+use JsPackager\CompiledFileAndManifest\CompiledAndManifestFileUtilityService;
+use JsPackager\CompiledFileAndManifest\FilenameConverter;
 use JsPackager\Compiler;
+use JsPackager\Compiler\FileCompilationResult;
 use JsPackager\DefaultRemotePath;
+use JsPackager\Helpers\FileFinder;
+use JsPackager\Helpers\FileHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -73,7 +78,7 @@ HELPBLURB
 
         $compilerTimeStart = microtime( true );
 
-        $compiler = new Compiler();
+        $compiler = new Compiler('shared', '@remote', $this->logger, false, new FileHandler());
         if ( $remoteFolderPath ) {
             $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
             $compiler->remoteFolderPath = $remoteFolderPath;
@@ -135,12 +140,13 @@ HELPBLURB
 
         $this->logger->info( "Parsing application folder: \"{$folderPath}\" for compilation" );
 
+        $finder = new FileFinder($this->logger);
 
         try
         {
             $compilationTimingStart = microtime( true );
 
-            $filesToCompile = $compiler->parseFolderForSourceFiles( $folderPath, 'updateUserInterface' );
+            $filesToCompile = $finder->parseFolderForSourceFiles( $folderPath );
             $numberOfFilesToCompile = count($filesToCompile);
             $numberOfFilesCompiled = 0;
 
@@ -218,7 +224,8 @@ HELPBLURB
         {
             $compilationTimingStart = microtime( true );
 
-            $compiledFiles = $compiler->compileAndWriteFilesAndManifests( $filePath, 'updateUserInterface' );
+            $compiledFiles = $compiler->compileAndWriteFilesAndManifests( $filePath );
+            $compiledFiles = $compiledFiles->getValuesAsArray();
 
             $compilationTimingEnd = microtime( true );
             $compilationTotalTime = $compilationTimingEnd - $compilationTimingStart;
@@ -227,9 +234,12 @@ HELPBLURB
             $this->updateUserInterface( "\t\tIt resulted in " . count($compiledFiles) . ' compiled packages:' . PHP_EOL, 'output' );
 
             foreach( $compiledFiles as $compiledFile ) {
-                $this->updateUserInterface( "\t\t{$compiledFile->sourcePath}\n", 'output' );
-                $this->updateUserInterface( "\t\t\t{$compiledFile->compiledPath}\n", 'output' );
-                $this->updateUserInterface( "\t\t\t{$compiledFile->manifestPath}\n", 'output' );
+                /**
+                 * @var FileCompilationResult $compiledFile
+                 */
+                $this->updateUserInterface( "\t\t{$compiledFile->getSourcePath()}\n", 'output' );
+                $this->updateUserInterface( "\t\t\t{$compiledFile->getCompiledPath()}\n", 'output' );
+                $this->updateUserInterface( "\t\t\t{$compiledFile->getManifestPath()}\n", 'output' );
             }
         }
         catch ( MissingFileException $e )

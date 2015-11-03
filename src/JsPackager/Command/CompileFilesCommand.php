@@ -77,6 +77,10 @@ HELPBLURB
 
 
         $compiler = new Compiler();
+
+        $hideWarnings = $input->getOption('hideWarnings');
+        $compiler->setDisplayIndividualWarnings( ! $hideWarnings );
+
         if ( $remoteFolderPath ) {
             $this->logger->info('Remote base path given: "'. $remoteFolderPath . '".');
             $compiler->remoteFolderPath = $remoteFolderPath;
@@ -245,7 +249,8 @@ HELPBLURB
     {
         return new InputDefinition(array(
             new InputArgument('file',   InputArgument::REQUIRED | InputArgument::IS_ARRAY,    'Relative or absolute path to file to compile.'),
-            new InputOption('remotePath',  'r', InputArgument::OPTIONAL,    'Relative or absolute base path to use for parsing @remote files.', $this->defaultRemotePath),
+            new InputOption('remotePath', 'r', InputArgument::OPTIONAL, 'Relative or absolute base path to use for parsing @remote files.', $this->defaultRemotePath),
+            new InputOption('hideWarnings', null, InputOption::VALUE_NONE, 'Provide to see individual warnings encountered during compilation.'),
         ));
     }
 }

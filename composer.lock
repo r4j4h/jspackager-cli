@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "08cdd540a0ed3f4f3cd5718c590c908f",
+    "content-hash": "0d1711ac3feac7672781a381ff64f8b0",
     "packages": [
         {
             "name": "psr/log",
@@ -46,16 +47,16 @@
         },
         {
             "name": "r4j4h/jspackager-test",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/r4j4h/jspackager-test.git",
-                "reference": "b4ec91cd416cd535aae6ff1473d2124a7f52418a"
+                "reference": "27f67e09622767e78a682b9b73dec4c4aa6b5a3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/b4ec91cd416cd535aae6ff1473d2124a7f52418a",
-                "reference": "b4ec91cd416cd535aae6ff1473d2124a7f52418a",
+                "url": "https://api.github.com/repos/r4j4h/jspackager-test/zipball/27f67e09622767e78a682b9b73dec4c4aa6b5a3c",
+                "reference": "27f67e09622767e78a682b9b73dec4c4aa6b5a3c",
                 "shasum": ""
             },
             "require": {
@@ -94,22 +95,22 @@
                 "file inclusion"
             ],
             "support": {
-                "source": "https://github.com/r4j4h/jspackager-test/tree/2.0.3",
+                "source": "https://github.com/r4j4h/jspackager-test/tree/2.0.4",
                 "issues": "https://github.com/r4j4h/jspackager-test/issues"
             },
-            "time": "2015-06-08 21:17:01"
+            "time": "2015-11-03 16:04:27"
         },
         {
             "name": "symfony/console",
             "version": "v2.7.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Console.git",
+                "url": "https://github.com/symfony/console.git",
                 "reference": "d6cf02fe73634c96677e428f840704bfbcaec29e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/d6cf02fe73634c96677e428f840704bfbcaec29e",
+                "url": "https://api.github.com/repos/symfony/console/zipball/d6cf02fe73634c96677e428f840704bfbcaec29e",
                 "reference": "d6cf02fe73634c96677e428f840704bfbcaec29e",
                 "shasum": ""
             },
@@ -1215,12 +1216,12 @@
             "version": "v2.7.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Config.git",
+                "url": "https://github.com/symfony/config.git",
                 "reference": "6c905bbed1e728226de656e4c07d620dfe9e80d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/6c905bbed1e728226de656e4c07d620dfe9e80d9",
+                "url": "https://api.github.com/repos/symfony/config/zipball/6c905bbed1e728226de656e4c07d620dfe9e80d9",
                 "reference": "6c905bbed1e728226de656e4c07d620dfe9e80d9",
                 "shasum": ""
             },
@@ -1265,12 +1266,12 @@
             "version": "v2.7.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/DependencyInjection.git",
+                "url": "https://github.com/symfony/dependency-injection.git",
                 "reference": "851e3ffe8a366b1590bdaf3df2c1395f2d27d8a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/851e3ffe8a366b1590bdaf3df2c1395f2d27d8a6",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/851e3ffe8a366b1590bdaf3df2c1395f2d27d8a6",
                 "reference": "851e3ffe8a366b1590bdaf3df2c1395f2d27d8a6",
                 "shasum": ""
             },
@@ -1325,12 +1326,12 @@
             "version": "v2.7.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
+                "url": "https://github.com/symfony/filesystem.git",
                 "reference": "2d7b2ddaf3f548f4292df49a99d19c853d43f0b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/2d7b2ddaf3f548f4292df49a99d19c853d43f0b8",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/2d7b2ddaf3f548f4292df49a99d19c853d43f0b8",
                 "reference": "2d7b2ddaf3f548f4292df49a99d19c853d43f0b8",
                 "shasum": ""
             },
